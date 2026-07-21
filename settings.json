@@ -6,8 +6,8 @@
     "type": "offline"
   },
   "server": {
-    "ip": "1ElytraSMP.aternos.me",
-    "port": 40849,
+    "ip": "1elytrasmp.minefort.com",
+    "port": 25565,
     "version": "",
     "try-creative": false
   },
@@ -31,9 +31,9 @@
       "repeat": true,
       "repeat-delay": 120,
       "messages": [
-        "I'm a regular player",
-        "Subscribe to Slobos!",
-        "I like to play Minecraft!"
+        "Wsp everyone",
+        "Rtp to begin!",
+        "Do you like the server!"
       ]
     },
     "chat-log": true,
