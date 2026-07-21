@@ -6,7 +6,7 @@
     "type": "offline"
   },
   "server": {
-    "ip": "1ElytraSMP.aternos.me",
+    "ip": "1ElytraSMP.aternos.me:40849",
     "port": 40849,
     "version": "",
     "try-creative": false
