@@ -37,19 +37,19 @@
     },
     "chat-log": true,
     "auto-reconnect": true,
-    "auto-reconnect-delay": 5000,
+    "auto-reconnect-delay": 15000,
     "max-reconnect-delay": 120000
   },
   "movement": {
     "enabled": true,
     "circle-walk": {
-      "enabled": true,
-      "radius": 2,
+      "enabled": false,
+      "radius": 1,
       "speed": 3000
     },
     "look-around": {
       "enabled": true,
-      "interval": 10000
+      "interval": 8000
     },
     "random-jump": {
       "enabled": false,
