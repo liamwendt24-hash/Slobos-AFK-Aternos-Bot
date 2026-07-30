@@ -2,16 +2,16 @@ const mineflayer = require('mineflayer');
 const http = require('http');
 const fs = require('fs');
 
-// 1. Keep-Alive Web Server
+// 1. Keep-Alive Web Server for UptimeRobot
 const PORT = process.env.PORT || 3000;
 http.createServer((req, res) => {
   res.writeHead(200, { 'Content-Type': 'text/plain' });
-  res.end('AFK Bot is running!');
+  res.end('AFK Bot is active!');
 }).listen(PORT, () => {
-  console.log(`[HTTP] Server listening on port ${PORT}`);
+  console.log(`[HTTP] Keep-alive server running on port ${PORT}`);
 });
 
-// 2. Load settings
+// 2. Load settings from settings.json
 let settings;
 try {
   settings = JSON.parse(fs.readFileSync('settings.json', 'utf8'));
@@ -30,52 +30,62 @@ function createBot() {
     version: settings.server.version || false
   });
 
-  let afkInterval = null;
+  let humanRoutineInterval = null;
 
   bot.once('spawn', () => {
-    console.log('[Bot] Spawned in world.');
+    console.log('[Bot] Spawned into world.');
 
-    // Wait 5 seconds before AuthMe login
+    // 1. AuthMe login with a 5-second natural join delay
     if (settings.utils['auto-auth']?.enabled) {
       setTimeout(() => {
-        bot.chat(`/login ${settings.utils['auto-auth'].password}`);
-        console.log('[Bot] Logged in.');
+        const pwd = settings.utils['auto-auth'].password;
+        bot.chat(`/login ${pwd}`);
+        console.log('[Bot] Sent AuthMe login.');
       }, 5000);
     }
 
-    // Start humanized anti-AFK routine after 10 seconds
+    // 2. Start human behavior actions after logging in
     setTimeout(() => {
-      console.log('[Bot] Anti-AFK routine active.');
-      
-      afkInterval = setInterval(() => {
+      console.log('[Bot] Human-like behavior active.');
+
+      humanRoutineInterval = setInterval(() => {
         if (!bot.entity) return;
 
-        // Randomly choose an action: look around, sneak, or take a short step
-        const action = Math.random();
+        const actionChoice = Math.random();
 
-        if (action < 0.5) {
-          // Look around randomly
-          const yaw = bot.entity.yaw + (Math.random() - 0.5) * 1.5;
-          const pitch = (Math.random() - 0.5) * 0.5;
-          bot.look(yaw, pitch, true);
-        } else if (action < 0.8) {
-          // Sneak for a moment
-          bot.setControlState('sneak', true);
-          setTimeout(() => bot.setControlState('sneak', false), 1200);
-        } else {
-          // Take a tiny step forward, then stop
-          bot.setControlState('forward', true);
-          setTimeout(() => bot.setControlState('forward', false), 800);
+        // 50% Chance: Smooth head glance
+        if (actionChoice < 0.50) {
+          const yawShift = (Math.random() - 0.5) * 1.8;
+          const pitchShift = (Math.random() - 0.5) * 0.4;
+          bot.look(bot.entity.yaw + yawShift, pitchShift, true);
         }
-      }, 6000 + Math.random() * 4000); // Trigger every 6-10 seconds randomly
+        // 20% Chance: Brief sneak (Shift)
+        else if (actionChoice < 0.70) {
+          bot.setControlState('sneak', true);
+          setTimeout(() => bot.setControlState('sneak', false), 1000 + Math.random() * 1500);
+        }
+        // 20% Chance: Take a small 1-step walk
+        else if (actionChoice < 0.90) {
+          bot.setControlState('forward', true);
+          setTimeout(() => bot.setControlState('forward', false), 400 + Math.random() * 600);
+        }
+        // 10% Chance: Swing arm / punch air
+        else {
+          bot.swingArm('right');
+        }
+
+      }, 6000 + Math.random() * 6000); // Triggers every 6 to 12 seconds randomly
+
     }, 10000);
   });
 
-  bot.on('kicked', (reason) => console.log('[Bot Kicked Reason]:', reason));
+  bot.on('kicked', (reason) => {
+    console.log('[Bot Kicked Reason]:', reason);
+  });
 
   bot.on('end', (reason) => {
-    if (afkInterval) clearInterval(afkInterval);
-    console.log(`[Bot] Disconnected (${reason}). Reconnecting in 15s...`);
+    if (humanRoutineInterval) clearInterval(humanRoutineInterval);
+    console.log(`[Bot] Disconnected (${reason}). Reconnecting in 15 seconds...`);
     setTimeout(createBot, 15000);
   });
 
