@@ -6,7 +6,7 @@
     "type": "offline"
   },
   "server": {
-    "ip": "1elytrasmp.minefort.com",
+    "ip": "kismetcraft.mcsh.io",
     "port": 25565,
     "version": "",
     "try-creative": false
@@ -20,7 +20,10 @@
   "utils": {
     "auto-auth": {
       "enabled": true,
-      "password": "chalol78"
+      "password": "chalol78",
+      "register": true,
+      "register-command": "/register {password} {password}",
+      "login-command": "/login {password}"
     },
     "anti-afk": {
       "enabled": true,
