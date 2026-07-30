@@ -11,12 +11,12 @@ http.createServer((req, res) => {
   console.log(`[HTTP] Keep-alive server listening on port ${PORT}`);
 });
 
-// 2. Load JSON Configuration
-let config;
+// 2. Load settings configuration from settings.json
+let settings;
 try {
-  config = JSON.parse(fs.readFileSync('config.json', 'utf8'));
+  settings = JSON.parse(fs.readFileSync('settings.json', 'utf8'));
 } catch (err) {
-  console.error('[Config Error] Could not load config.json:', err.message);
+  console.error('[Settings Error] Could not load settings.json:', err.message);
   process.exit(1);
 }
 
@@ -24,18 +24,18 @@ function createBotInstance() {
   console.log('[Bot] Connecting to server...');
 
   const bot = mineflayer.createBot({
-    host: config.server.ip,
-    port: config.server.port,
-    username: config["bot-account"].username,
-    version: config.server.version || false
+    host: settings.server.ip,
+    port: settings.server.port,
+    username: settings["bot-account"].username,
+    version: settings.server.version || false
   });
 
   // Handle AuthMe login after spawning
   bot.once('spawn', () => {
     console.log('[Bot] Spawned into world.');
     
-    if (config.utils['auto-auth'] && config.utils['auto-auth'].enabled) {
-      const pwd = config.utils['auto-auth'].password;
+    if (settings.utils['auto-auth'] && settings.utils['auto-auth'].enabled) {
+      const pwd = settings.utils['auto-auth'].password;
       setTimeout(() => {
         bot.chat(`/login ${pwd}`);
         console.log('[Bot] Sent /login command.');
@@ -45,7 +45,7 @@ function createBotInstance() {
 
   // Detection & jump logic for obstacles directly ahead
   bot.on('physicsTick', () => {
-    if (!config.movement.enabled || !bot.entity) return;
+    if (!settings.movement.enabled || !bot.entity) return;
 
     const yaw = bot.entity.yaw;
     const frontX = -Math.sin(yaw) * 0.8;
