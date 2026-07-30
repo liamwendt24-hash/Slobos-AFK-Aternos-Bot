@@ -20,8 +20,8 @@
   "utils": {
     "auto-auth": {
       "enabled": true,
-      "password": "chalol78",
-      "register": true,
+      "password": "113322",
+      "register": false,
       "register-command": "/register {password} {password}",
       "login-command": "/login {password}"
     },
