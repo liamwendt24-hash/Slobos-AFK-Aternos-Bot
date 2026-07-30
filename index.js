@@ -30,58 +30,53 @@ function createBot() {
     version: settings.server.version || false
   });
 
+  let afkInterval = null;
+
   bot.once('spawn', () => {
     console.log('[Bot] Spawned in world.');
 
-    // Handle AuthMe /login
+    // Wait 5 seconds before AuthMe login
     if (settings.utils['auto-auth']?.enabled) {
       setTimeout(() => {
         bot.chat(`/login ${settings.utils['auto-auth'].password}`);
         console.log('[Bot] Logged in.');
-      }, 2500);
+      }, 5000);
     }
 
-    // Start walking forward once spawned
+    // Start humanized anti-AFK routine after 10 seconds
     setTimeout(() => {
-      if (settings.movement.enabled) {
-        bot.setControlState('forward', true);
-      }
-    }, 4000);
+      console.log('[Bot] Anti-AFK routine active.');
+      
+      afkInterval = setInterval(() => {
+        if (!bot.entity) return;
+
+        // Randomly choose an action: look around, sneak, or take a short step
+        const action = Math.random();
+
+        if (action < 0.5) {
+          // Look around randomly
+          const yaw = bot.entity.yaw + (Math.random() - 0.5) * 1.5;
+          const pitch = (Math.random() - 0.5) * 0.5;
+          bot.look(yaw, pitch, true);
+        } else if (action < 0.8) {
+          // Sneak for a moment
+          bot.setControlState('sneak', true);
+          setTimeout(() => bot.setControlState('sneak', false), 1200);
+        } else {
+          // Take a tiny step forward, then stop
+          bot.setControlState('forward', true);
+          setTimeout(() => bot.setControlState('forward', false), 800);
+        }
+      }, 6000 + Math.random() * 4000); // Trigger every 6-10 seconds randomly
+    }, 10000);
   });
 
-  // Smooth look-around timer (rotates head so it looks natural)
-  setInterval(() => {
-    if (bot.entity && settings.movement.enabled) {
-      const yaw = bot.entity.yaw + 0.5;
-      const pitch = (Math.random() - 0.5) * 0.2;
-      bot.look(yaw, pitch, true);
-    }
-  }, settings.movement['look-around']?.interval || 8000);
-
-  // Jump over blocks directly in front
-  bot.on('physicsTick', () => {
-    if (!settings.movement.enabled || !bot.entity) return;
-
-    const yaw = bot.entity.yaw;
-    const frontX = -Math.sin(yaw) * 0.8;
-    const frontZ = -Math.cos(yaw) * 0.8;
-
-    const feetBlock = bot.blockAt(bot.entity.position.offset(frontX, 0, frontZ));
-    const headBlock = bot.blockAt(bot.entity.position.offset(frontX, 1, frontZ));
-
-    // Jump if there is a 1-block wall ahead with open air above it
-    if (feetBlock && feetBlock.boundingBox === 'block') {
-      if (!headBlock || headBlock.boundingBox === 'empty') {
-        bot.setControlState('jump', true);
-      }
-    } else {
-      bot.setControlState('jump', false);
-    }
-  });
+  bot.on('kicked', (reason) => console.log('[Bot Kicked Reason]:', reason));
 
   bot.on('end', (reason) => {
-    console.log(`[Bot] Disconnected (${reason}). Reconnecting in 10s...`);
-    setTimeout(createBot, 10000);
+    if (afkInterval) clearInterval(afkInterval);
+    console.log(`[Bot] Disconnected (${reason}). Reconnecting in 15s...`);
+    setTimeout(createBot, 15000);
   });
 
   bot.on('error', (err) => console.error('[Bot Error]', err.message));
