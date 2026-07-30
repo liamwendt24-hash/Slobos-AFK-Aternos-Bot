@@ -31,44 +31,40 @@
     },
     "chat-messages": {
       "enabled": false,
-      "repeat": true,
-      "repeat-delay": 120,
-      "messages": [
-        "Wsp everyone",
-        "Rtp to begin!",
-        "Do you like the server!"
-      ]
+      "repeat": false,
+      "repeat-delay": 300,
+      "messages": []
     },
     "chat-log": true,
     "auto-reconnect": true,
-    "auto-reconnect-delay": 5000,
+    "auto-reconnect-delay": 10000,
     "max-reconnect-delay": 120000
   },
   "movement": {
     "enabled": true,
     "circle-walk": {
       "enabled": true,
-      "radius": 4,
-      "speed": 3000
+      "radius": 2,
+      "speed": 4500
     },
     "look-around": {
       "enabled": true,
-      "interval": 8000
+      "interval": 12000
     },
     "random-jump": {
       "enabled": true,
-      "interval": 120000
+      "interval": 180000
     }
   },
   "modules": {
     "avoidMobs": true,
     "combat": true,
     "beds": false,
-    "chat": true,
+    "chat": false,
     "console-commands": true
   },
   "combat": {
-    "attack-mobs": true,
+    "attack-mobs": false,
     "auto-eat": true
   },
   "beds": {
@@ -85,6 +81,6 @@
     }
   },
   "chat": {
-    "respond": true
+    "respond": false
   }
 }
