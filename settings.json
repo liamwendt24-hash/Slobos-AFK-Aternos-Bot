@@ -12,7 +12,7 @@
     "try-creative": false
   },
   "position": {
-    "enabled": true,
+    "enabled": false,
     "x": 0,
     "y": 100,
     "z": 0
@@ -27,17 +27,17 @@
     },
     "anti-afk": {
       "enabled": true,
-      "sneak": true
+      "sneak": false
     },
     "chat-messages": {
       "enabled": false,
       "repeat": false,
-      "repeat-delay": 300,
+      "repeat-delay": 120,
       "messages": []
     },
     "chat-log": true,
     "auto-reconnect": true,
-    "auto-reconnect-delay": 10000,
+    "auto-reconnect-delay": 5000,
     "max-reconnect-delay": 120000
   },
   "movement": {
@@ -45,15 +45,15 @@
     "circle-walk": {
       "enabled": true,
       "radius": 2,
-      "speed": 4500
+      "speed": 3000
     },
     "look-around": {
       "enabled": true,
-      "interval": 12000
+      "interval": 10000
     },
     "random-jump": {
-      "enabled": true,
-      "interval": 180000
+      "enabled": false,
+      "interval": 0
     }
   },
   "modules": {
